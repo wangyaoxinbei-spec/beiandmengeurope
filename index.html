@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申根签证材料核对</title>
+    <style>
+        /* 这里的 CSS 负责你喜欢的极简美学 */
+        body { background-color: #F5F5F0; color: #4A4540; font-family: "PingFang SC", "Hiragino Sans GB", serif; margin: 0; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { font-weight: 300; border-bottom: 1px solid #D1CEC5; padding-bottom: 20px; letter-spacing: 2px; }
+        .progress-container { margin: 30px 0; }
+        .progress-bar { height: 2px; background: #D1CEC5; width: 100%; position: relative; }
+        #progress-fill { height: 100%; background: #8C867A; width: 0%; transition: width 0.4s ease; }
+        .category { margin-top: 30px; font-size: 12px; color: #8C867A; letter-spacing: 1px; font-weight: bold; }
+        .item { background: white; margin: 10px 0; padding: 15px; display: flex; align-items: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .item:hover { border-color: #D1CEC5; }
+        .item.checked { opacity: 0.5; }
+        .checkbox { width: 16px; height: 16px; border: 1px solid #D1CEC5; margin-right: 15px; position: relative; }
+        .checked .checkbox { background: #8C867A; border-color: #8C867A; }
+        .checked .checkbox::after { content: "✓"; color: white; font-size: 10px; position: absolute; left: 3px; top: 0; }
+        .checked span { text-decoration: line-through; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Schengen Checklist</h1>
+        <div class="progress-container">
+            <div style="display:flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
+                <span>进度报告</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+        </div>
+        
+        <div id="list-content"></div>
+        
+        <p style="margin-top: 50px; text-align: center; font-size: 10px; opacity: 0.4; letter-spacing: 2px;">EST. 2026 / BEI&MENG.EUROPE</p>
+    </div>
+
+    <script>
+    // 纯净版数据：直接对应官方 PDF 要求
+    const data = [
+        { cat: "个人证件", text: "护照原件（10年内签发，至少2页空白，离境后3个月有效）", detail: "需扫描身份页及所有签证、出入境章页" },
+        { cat: "个人证件", text: "证件照片（符合证件照标准）", detail: "近6个月内拍摄，白底，3.5x4.5cm" },
+        { cat: "旅行证明", text: "行程单（英文或法文）", detail: "描述计划行程的详细节目单" },
+        { cat: "旅行证明", text: "往返机票预订单", detail: "从中国出发和返回的完整机票订单" },
+        { cat: "旅行证明", text: "住宿证明", detail: "酒店预订单或每天120欧元的资金证明" },
+        { cat: "旅行证明", text: "旅游医疗保险", detail: "保额不少于3万欧元，涵盖全程" },
+        { cat: "职业/学生", text: "社会职业地位证明", detail: "在读证明（抬头纸加盖公章）或工作证明" },
+        { cat: "财务能力", text: "银行流水（近三个月）", detail: "活期账户流水，建议有固定收入体现" }
+    ];
+
+    const listContent = document.getElementById('list-content');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+
+    // 初始化状态：尝试从本地存储读取，如果没有则新建
+    let states = JSON.parse(localStorage.getItem('visa-states')) || new Array(data.length).fill(false);
+
+    function render() {
+        let html = '';
+        let lastCat = '';
+        data.forEach((item, index) => {
+            if (item.cat !== lastCat) {
+                html += `<div class="category">${item.cat}</div>`;
+                lastCat = item.cat;
+            }
+            html += `
+                <div class="item ${states[index] ? 'checked' : ''}" onclick="toggle(${index})" style="flex-direction: column; align-items: flex-start; display: flex;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <div class="checkbox"></div>
+                        <span style="font-weight: 500;">${item.text}</span>
+                    </div>
+                    <div style="font-size: 11px; opacity: 0.6; margin-left: 31px; margin-top: 4px;">
+                        ${item.detail}
+                    </div>
+                </div>
+            `;
+        });
+        listContent.innerHTML = html;
+        updateProgress();
+    }
+
+    function toggle(index) {
+        states[index] = !states[index];
+        localStorage.setItem('visa-states', JSON.stringify(states));
+        render();
+    }
+
+    function updateProgress() {
+        const count = states.filter(s => s).length;
+        const percent = Math.round((count / data.length) * 100);
+        progressFill.style.width = percent + '%';
+        progressText.innerText = percent + '%';
+    }
+
+    // 执行渲染
+    render();
+</script>
+</body>
+</html>
