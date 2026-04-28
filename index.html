@@ -3,100 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>申根签证材料核对</title>
+    <title>Bei & Meng Europe Vibe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        /* 这里的 CSS 负责你喜欢的极简美学 */
-        body { background-color: #F5F5F0; color: #4A4540; font-family: "PingFang SC", "Hiragino Sans GB", serif; margin: 0; padding: 40px 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        h1 { font-weight: 300; border-bottom: 1px solid #D1CEC5; padding-bottom: 20px; letter-spacing: 2px; }
-        .progress-container { margin: 30px 0; }
-        .progress-bar { height: 2px; background: #D1CEC5; width: 100%; position: relative; }
-        #progress-fill { height: 100%; background: #8C867A; width: 0%; transition: width 0.4s ease; }
-        .category { margin-top: 30px; font-size: 12px; color: #8C867A; letter-spacing: 1px; font-weight: bold; }
-        .item { background: white; margin: 10px 0; padding: 15px; display: flex; align-items: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .item:hover { border-color: #D1CEC5; }
-        .item.checked { opacity: 0.5; }
-        .checkbox { width: 16px; height: 16px; border: 1px solid #D1CEC5; margin-right: 15px; position: relative; }
-        .checked .checkbox { background: #8C867A; border-color: #8C867A; }
-        .checked .checkbox::after { content: "✓"; color: white; font-size: 10px; position: absolute; left: 3px; top: 0; }
-        .checked span { text-decoration: line-through; }
+        :root {
+            --cream: #FDFCF8;
+            --mist-blue: #B2C3D2;
+            --olive: #8B9474;
+            --text-main: #4A4540;
+        }
+        body { 
+            background-color: var(--cream); 
+            color: var(--text-main);
+            font-family: 'Noto Serif SC', serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .vibe-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            transition: all 0.5s ease;
+        }
+        .serif-title { font-family: 'Bodoni Moda', serif; font-italic: italic; }
+        .progress-bar { height: 1px; background: #D1CEC5; width: 100%; position: relative; overflow: hidden; }
+        #progress-fill { height: 100%; background: var(--olive); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Schengen Checklist</h1>
-        <div class="progress-container">
-            <div style="display:flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
-                <span>进度报告</span>
-                <span id="progress-text">0%</span>
+<body class="p-6 md:p-12">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-end mb-16 border-b border-stone-200 pb-8">
+            <div>
+                <h1 class="text-4xl serif-title italic tracking-widest opacity-90">Bei & Meng</h1>
+                <p class="text-xs uppercase tracking-[0.3em] mt-2 opacity-50">Europe Summer Archive 2026</p>
             </div>
-            <div class="progress-bar"><div id="progress-fill"></div></div>
-        </div>
-        
-        <div id="list-content"></div>
-        
-        <p style="margin-top: 50px; text-align: center; font-size: 10px; opacity: 0.4; letter-spacing: 2px;">EST. 2026 / BEI&MENG.EUROPE</p>
+            <div class="flex gap-6 text-sm opacity-60">
+                <span class="cursor-pointer hover:opacity-100 transition border-b border-transparent hover:border-stone-400">Archive</span>
+                <span class="cursor-pointer hover:opacity-100 transition border-b border-transparent hover:border-stone-400">Map</span>
+                <span class="cursor-pointer hover:opacity-100 transition border-b border-transparent hover:border-stone-400">Vibe Check</span>
+            </div>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            
+            <div class="col-span-1 space-y-8">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-widest mb-4 opacity-40">Current City</h2>
+                    <select id="city-select" class="bg-transparent text-2xl serif-title outline-none cursor-pointer">
+                        <option>Paris</option>
+                        <option>Rome</option>
+                        <option>Florence</option>
+                        <option>Lucerne</option>
+                        <option>Nice</option>
+                    </select>
+                </div>
+
+                <div class="progress-container">
+                    <div class="flex justify-between text-[10px] uppercase tracking-widest mb-2 opacity-60">
+                        <span>Checklist Progress</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar"><div id="progress-fill"></div></div>
+                </div>
+
+                <div class="vibe-card p-6 border-l-2 border-stone-300">
+                    <h3 class="text-xs font-bold mb-3 opacity-40">Weather & Wear</h3>
+                    <p class="text-sm italic">22°C / 晴朗</p>
+                    <p class="text-xs mt-2 opacity-70">适合亚麻衬衫与法式平底鞋，落日后需加一件薄开衫。</p>
+                </div>
+            </div>
+
+            <div class="col-span-2 space-y-12">
+                <div class="vibe-card p-8">
+                    <h2 class="text-sm font-medium tracking-widest mb-6 flex justify-between">
+                        <span>WISH LIST / 心愿清单</span>
+                        <span class="opacity-30">SHARED BY TWO</span>
+                    </h2>
+                    <div id="wish-list" class="space-y-4">
+                        </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="vibe-card p-6 bg-stone-100/30">
+                        <span class="text-[10px] opacity-40 uppercase">Bei's Fragment</span>
+                        <p class="text-sm mt-2 italic">“塞纳河边的风比想象中凉，但咖啡很烫。”</p>
+                    </div>
+                    <div class="vibe-card p-6 bg-[#B2C3D2]/10">
+                        <span class="text-[10px] opacity-40 uppercase">Meng's Fragment</span>
+                        <p class="text-sm mt-2 italic">“那个中古店的老板长得好像电影里的配角。”</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-32 text-center py-12 border-t border-stone-100">
+            <p class="text-[10px] opacity-30 tracking-[0.5em] uppercase text-stone-500">
+                Slow Travel / Pure Vibe / Private Archive
+            </p>
+        </footer>
     </div>
 
     <script>
-    // 纯净版数据：直接对应官方 PDF 要求
-    const data = [
-        { cat: "个人证件", text: "护照原件（10年内签发，至少2页空白，离境后3个月有效）", detail: "需扫描身份页及所有签证、出入境章页" },
-        { cat: "个人证件", text: "证件照片（符合证件照标准）", detail: "近6个月内拍摄，白底，3.5x4.5cm" },
-        { cat: "旅行证明", text: "行程单（英文或法文）", detail: "描述计划行程的详细节目单" },
-        { cat: "旅行证明", text: "往返机票预订单", detail: "从中国出发和返回的完整机票订单" },
-        { cat: "旅行证明", text: "住宿证明", detail: "酒店预订单或每天120欧元的资金证明" },
-        { cat: "旅行证明", text: "旅游医疗保险", detail: "保额不少于3万欧元，涵盖全程" },
-        { cat: "职业/学生", text: "社会职业地位证明", detail: "在读证明（抬头纸加盖公章）或工作证明" },
-        { cat: "财务能力", text: "银行流水（近三个月）", detail: "活期账户流水，建议有固定收入体现" }
-    ];
+        // 核心心愿清单数据 (差异化功能点)
+        const wishes = [
+            { id: 1, text: "在塞纳河边喝一杯不赶时间的咖啡", checked: false },
+            { id: 2, text: "在佛罗伦萨的小巷偶遇一家中古店", checked: false },
+            { id: 3, text: "在采尔马特山顶看一场完整的日落", checked: false },
+            { id: 4, text: "在威尼斯迷路一次", checked: false }
+        ];
 
-    const listContent = document.getElementById('list-content');
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
+        const wishListContainer = document.getElementById('wish-list');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
 
-    // 初始化状态：尝试从本地存储读取，如果没有则新建
-    let states = JSON.parse(localStorage.getItem('visa-states')) || new Array(data.length).fill(false);
-
-    function render() {
-        let html = '';
-        let lastCat = '';
-        data.forEach((item, index) => {
-            if (item.cat !== lastCat) {
-                html += `<div class="category">${item.cat}</div>`;
-                lastCat = item.cat;
-            }
-            html += `
-                <div class="item ${states[index] ? 'checked' : ''}" onclick="toggle(${index})" style="flex-direction: column; align-items: flex-start; display: flex;">
-                    <div style="display: flex; align-items: center; width: 100%;">
-                        <div class="checkbox"></div>
-                        <span style="font-weight: 500;">${item.text}</span>
-                    </div>
-                    <div style="font-size: 11px; opacity: 0.6; margin-left: 31px; margin-top: 4px;">
-                        ${item.detail}
-                    </div>
+        function renderWishes() {
+            wishListContainer.innerHTML = wishes.map((wish, index) => `
+                <div onclick="toggleWish(${index})" class="group flex items-center gap-4 cursor-pointer">
+                    <div class="w-3 h-3 border border-stone-300 flex-shrink-0 transition-all ${wish.checked ? 'bg-stone-500 border-stone-500' : ''}"></div>
+                    <span class="text-sm transition-all ${wish.checked ? 'opacity-30 line-through' : 'group-hover:translate-x-1'}">
+                        ${wish.text}
+                    </span>
                 </div>
-            `;
-        });
-        listContent.innerHTML = html;
-        updateProgress();
-    }
+            `).join('');
+            updateProgress();
+        }
 
-    function toggle(index) {
-        states[index] = !states[index];
-        localStorage.setItem('visa-states', JSON.stringify(states));
-        render();
-    }
+        function toggleWish(index) {
+            wishes[index].checked = !wishes[index].checked;
+            renderWishes();
+        }
 
-    function updateProgress() {
-        const count = states.filter(s => s).length;
-        const percent = Math.round((count / data.length) * 100);
-        progressFill.style.width = percent + '%';
-        progressText.innerText = percent + '%';
-    }
+        function updateProgress() {
+            const count = wishes.filter(w => w.checked).length;
+            const percent = Math.round((count / wishes.length) * 100);
+            progressFill.style.width = percent + '%';
+            progressText.innerText = percent + '%';
+        }
 
-    // 执行渲染
-    render();
-</script>
+        renderWishes();
+    </script>
 </body>
 </html>
