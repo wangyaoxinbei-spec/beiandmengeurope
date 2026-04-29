@@ -7,151 +7,173 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&display=swap');
-        :root { --cream: #F9F8F3; --olive: #7A8D84; }
+        :root { --cream: #F9F8F3; --olive: #7A8D84; --sand: #EEECE4; }
         body { background-color: var(--cream); color: #4A4540; font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased; }
         .serif-ital { font-family: 'Bodoni Moda', serif; font-style: italic; }
         .glass-card { background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; }
         .active-city { border: 1px solid var(--olive); opacity: 1 !important; }
         [contenteditable]:focus { outline: none; border-bottom: 1px dashed var(--olive); }
-        .photo-slot { aspect-ratio: 3/4; background: #EEECE4; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .photo-slot { aspect-ratio: 3/4; background: var(--sand); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .photo-slot:hover { background: #E5E3DB; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="p-6 md:p-12">
     <div class="max-w-md mx-auto">
         <header class="mb-10 text-center">
             <h1 class="text-4xl serif-ital mb-2 text-[#7A8D84]">Europe Summer</h1>
-            <p class="text-[10px] uppercase tracking-[0.3em] opacity-60 italic">Bei & Meng's Interactive Journal</p>
+            <p class="text-[10px] uppercase tracking-[0.3em] opacity-60 italic">Bei & Meng's Mood Journal</p>
         </header>
 
-        <section class="mb-10">
-            <div id="city-list" class="flex overflow-x-auto space-x-3 pb-4 no-scrollbar">
-                <span onclick="switchCity('Paris')" class="city-tag active-city px-4 py-1 glass-card text-xs whitespace-nowrap opacity-50" id="tag-Paris">Paris 🇫🇷</span>
-                <span onclick="switchCity('Rome')" class="city-tag px-4 py-1 glass-card text-xs whitespace-nowrap opacity-50" id="tag-Rome">Rome 🇮🇹</span>
-                <span onclick="switchCity('Luzern')" class="city-tag px-4 py-1 glass-card text-xs whitespace-nowrap opacity-50" id="tag-Luzern">Luzern 🇨🇭</span>
-                <span onclick="switchCity('Nice')" class="city-tag px-4 py-1 glass-card text-xs whitespace-nowrap opacity-50" id="tag-Nice">Nice 🇫🇷</span>
+        <section class="mb-8">
+            <div id="city-list" class="flex overflow-x-auto space-x-3 pb-2 no-scrollbar">
+                <span onclick="switchCity('Paris')" class="city-tag active-city px-4 py-1 glass-card text-[10px] whitespace-nowrap opacity-50" id="tag-Paris">Paris 🇫🇷</span>
+                <span onclick="switchCity('Rome')" class="city-tag px-4 py-1 glass-card text-[10px] whitespace-nowrap opacity-50" id="tag-Rome">Rome 🇮🇹</span>
+                <span onclick="switchCity('Luzern')" class="city-tag px-4 py-1 glass-card text-[10px] whitespace-nowrap opacity-50" id="tag-Luzern">Luzern 🇨🇭</span>
+                <span onclick="switchCity('Nice')" class="city-tag px-4 py-1 glass-card text-[10px] whitespace-nowrap opacity-50" id="tag-Nice">Nice 🇫🇷</span>
             </div>
         </section>
 
         <section class="mb-10">
-            <h2 class="text-xs font-light tracking-[0.2em] mb-4 flex items-center">
-                <span class="w-8 h-[1px] bg-[#7A8D84] mr-3"></span>OOTD / 今日穿搭
+            <h2 class="text-[11px] font-light tracking-[0.2em] mb-4 flex items-center">
+                <span class="w-8 h-[1px] bg-[#7A8D84] mr-3"></span>DAILY OOTD / 穿搭镜像
             </h2>
-            <div class="photo-slot glass-card" onclick="document.getElementById('photo-input').click()">
-                <div id="photo-placeholder" class="text-center opacity-40">
-                    <p class="text-2xl mb-1">+</p>
-                    <p class="text-[9px] uppercase tracking-tighter">Upload Vibe Photo</p>
-                </div>
-                <img id="display-photo" class="hidden">
-            </div>
-            <input type="file" id="photo-input" accept="image/*" class="hidden" onchange="handleUpload(this)">
-        </section>
-
-        <section class="mb-10">
-            <h2 class="text-xs font-light tracking-[0.2em] mb-6 flex items-center">
-                <span class="w-8 h-[1px] bg-[#7A8D84] mr-3"></span><span id="current-city-name">Paris</span> · 行程
-            </h2>
-            <div class="space-y-4">
-                <div class="glass-card p-6">
-                    <span class="text-[10px] serif-ital opacity-50 block mb-2">Morning / 午前</span>
-                    <p class="text-sm edit-text" id="plan-morning" contenteditable="true" onblur="saveData()">点击编辑上午的松弛计划...</p>
-                </div>
-                <div class="glass-card p-6 text-mist-blue">
-                    <span class="text-[10px] serif-ital opacity-50 block mb-2">Evening / 夜晚</span>
-                    <p class="text-sm edit-text" id="plan-evening" contenteditable="true" onblur="saveData()">留白给惊喜，或输入你的心情...</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-10">
-            <div class="glass-card p-6 bg-[#7A8D84]/5">
-                <h3 class="text-[10px] font-bold mb-4 tracking-widest text-[#7A8D84] uppercase">Shared Expenses</h3>
-                <div class="flex justify-between items-end mb-4">
-                    <div>
-                        <span class="text-3xl serif-ital font-light" id="bill-euro" contenteditable="true" onblur="saveData()">0.00</span>
-                        <span class="text-[10px] ml-2 opacity-50">€</span>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="space-y-2">
+                    <div class="photo-slot" onclick="triggerUpload('bei-1')">
+                        <div id="ph-bei-1" class="text-center opacity-40">
+                            <p class="text-[10px] serif-ital italic">Bei</p>
+                            <p class="text-[8px] uppercase tracking-widest">Upload</p>
+                        </div>
+                        <img id="img-bei-1" class="hidden">
                     </div>
                 </div>
-                <p class="text-[9px] opacity-40 italic">点击金额直接修改，记得标注垫付人哦</p>
+                <div class="space-y-2">
+                    <div class="photo-slot" onclick="triggerUpload('meng-1')">
+                        <div id="ph-meng-1" class="text-center opacity-40">
+                            <p class="text-[10px] serif-ital italic">Meng</p>
+                            <p class="text-[8px] uppercase tracking-widest">Upload</p>
+                        </div>
+                        <img id="img-meng-1" class="hidden">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="photo-slot h-32" onclick="triggerUpload('bei-2')">
+                    <span id="ph-bei-2" class="text-[8px] opacity-30 uppercase">Extra Slot</span>
+                    <img id="img-bei-2" class="hidden">
+                </div>
+                <div class="photo-slot h-32" onclick="triggerUpload('meng-2')">
+                    <span id="ph-meng-2" class="text-[8px] opacity-30 uppercase">Extra Slot</span>
+                    <img id="img-meng-2" class="hidden">
+                </div>
+            </div>
+
+            <input type="file" id="input-bei-1" class="hidden" onchange="handleUpload(this, 'bei-1')">
+            <input type="file" id="input-meng-1" class="hidden" onchange="handleUpload(this, 'meng-1')">
+            <input type="file" id="input-bei-2" class="hidden" onchange="handleUpload(this, 'bei-2')">
+            <input type="file" id="input-meng-2" class="hidden" onchange="handleUpload(this, 'meng-2')">
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-[11px] font-light tracking-[0.2em] mb-6 flex items-center">
+                <span class="w-8 h-[1px] bg-[#7A8D84] mr-3"></span>MEMORIES OF <span id="title-city" class="ml-1">PARIS</span>
+            </h2>
+            <div class="space-y-4">
+                <div class="glass-card p-5">
+                    <span class="text-[9px] serif-ital opacity-40 block mb-2 uppercase tracking-widest">Morning / 漫步计划</span>
+                    <p class="text-xs leading-relaxed" id="text-morning" contenteditable="true" onblur="saveTextData()">点击记录早上的咖啡馆或街道...</p>
+                </div>
+                <div class="glass-card p-5">
+                    <span class="text-[9px] serif-ital opacity-40 block mb-2 uppercase tracking-widest">Night / 情绪碎片</span>
+                    <p class="text-xs leading-relaxed italic opacity-70" id="text-night" contenteditable="true" onblur="saveTextData()">在这里输入只有你们懂的即兴感想...</p>
+                </div>
             </div>
         </section>
 
-        <footer class="text-center pb-20">
-            <p class="text-[9px] tracking-[0.4em] opacity-30 italic">CITY: <span id="footer-city">PARIS</span></p>
+        <section class="mb-12">
+            <div class="glass-card p-6 bg-[#7A8D84]/5 border-none">
+                <h3 class="text-[9px] font-bold mb-4 tracking-[0.2em] text-[#7A8D84] uppercase text-center">Travel Expenses</h3>
+                <div class="text-center">
+                    <span class="text-2xl serif-ital" id="bill-val" contenteditable="true" onblur="saveTextData()">0.00</span>
+                    <span class="text-xs ml-1 opacity-50">€</span>
+                </div>
+                <p class="text-[8px] text-center mt-2 opacity-30 tracking-widest uppercase">Tap to edit amount</p>
+            </div>
+        </section>
+
+        <footer class="text-center pb-12 border-t border-[#7A8D84]/10 pt-8">
+            <p class="text-[9px] tracking-[0.5em] opacity-30 italic">SAVOR EVERY SECOND</p>
         </footer>
     </div>
 
     <script>
         let currentCity = 'Paris';
+        const slots = ['bei-1', 'meng-1', 'bei-2', 'meng-2'];
 
-        // 1. 切换城市逻辑
         function switchCity(city) {
             currentCity = city;
-            // 更新 UI 样式
-            document.querySelectorAll('.city-tag').forEach(tag => tag.classList.remove('active-city'));
+            document.querySelectorAll('.city-tag').forEach(t => t.classList.remove('active-city'));
             document.getElementById(`tag-${city}`).classList.add('active-city');
-            
-            // 更新文字内容
-            document.getElementById('current-city-name').innerText = city;
-            document.getElementById('footer-city').innerText = city.toUpperCase();
-            
-            // 加载该城市的本地数据
-            loadData(city);
+            document.getElementById('title-city').innerText = city.toUpperCase();
+            loadAllData(city);
         }
 
-        // 2. 照片上传处理
-        function handleUpload(input) {
+        function triggerUpload(id) {
+            document.getElementById(`input-${id}`).click();
+        }
+
+        function handleUpload(input, slotId) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('display-photo');
+                reader.onload = (e) => {
+                    const img = document.getElementById(`img-${slotId}`);
                     img.src = e.target.result;
                     img.classList.remove('hidden');
-                    document.getElementById('photo-placeholder').classList.add('hidden');
-                    // 保存照片到本地 (注意：localStorage 空间有限，建议仅存一张)
-                    localStorage.setItem(`photo-${currentCity}`, e.target.result);
-                }
+                    document.getElementById(`ph-${slotId}`).classList.add('hidden');
+                    localStorage.setItem(`img-${currentCity}-${slotId}`, e.target.result);
+                };
                 reader.readAsDataURL(file);
             }
         }
 
-        // 3. 数据保存与加载
-        function saveData() {
+        function saveTextData() {
             const data = {
-                morning: document.getElementById('plan-morning').innerText,
-                evening: document.getElementById('plan-evening').innerText,
-                bill: document.getElementById('bill-euro').innerText
+                morning: document.getElementById('text-morning').innerText,
+                night: document.getElementById('text-night').innerText,
+                bill: document.getElementById('bill-val').innerText
             };
-            localStorage.setItem(`data-${currentCity}`, JSON.stringify(data));
+            localStorage.setItem(`text-${currentCity}`, JSON.stringify(data));
         }
 
-        function loadData(city) {
-            const savedData = JSON.parse(localStorage.getItem(`data-${city}`));
-            if (savedData) {
-                document.getElementById('plan-morning').innerText = savedData.morning;
-                document.getElementById('plan-evening').innerText = savedData.evening;
-                document.getElementById('bill-euro').innerText = savedData.bill;
-            } else {
-                document.getElementById('plan-morning').innerText = "点击编辑上午计划...";
-                document.getElementById('plan-evening').innerText = "点击编辑夜晚计划...";
-                document.getElementById('bill-euro').innerText = "0.00";
-            }
+        function loadAllData(city) {
+            // 加载文字
+            const savedText = JSON.parse(localStorage.getItem(`text-${city}`));
+            document.getElementById('text-morning').innerText = savedText?.morning || "点击记录早上的计划...";
+            document.getElementById('text-night').innerText = savedText?.night || "在这里输入即兴感想...";
+            document.getElementById('bill-val').innerText = savedText?.bill || "0.00";
 
-            const savedPhoto = localStorage.getItem(`photo-${city}`);
-            const img = document.getElementById('display-photo');
-            if (savedPhoto) {
-                img.src = savedPhoto;
-                img.classList.remove('hidden');
-                document.getElementById('photo-placeholder').classList.add('hidden');
-            } else {
-                img.classList.add('hidden');
-                document.getElementById('photo-placeholder').classList.remove('hidden');
-            }
+            // 加载照片
+            slots.forEach(slot => {
+                const savedImg = localStorage.getItem(`img-${city}-${slot}`);
+                const img = document.getElementById(`img-${slot}`);
+                const ph = document.getElementById(`ph-${slot}`);
+                if (savedImg) {
+                    img.src = savedImg;
+                    img.classList.remove('hidden');
+                    ph.classList.add('hidden');
+                } else {
+                    img.classList.add('hidden');
+                    ph.classList.remove('hidden');
+                }
+            });
         }
 
-        // 页面初始化
-        window.onload = () => loadData('Paris');
+        window.onload = () => loadAllData('Paris');
     </script>
 </body>
 </html>
