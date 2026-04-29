@@ -8,145 +8,186 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&display=swap');
         :root { --ink: #1A1A1A; --gold: #C5A059; --bg: #F2F0EB; }
-        body { background-color: var(--bg); color: var(--ink); font-family: 'Noto Serif SC', serif; overflow-x: hidden; }
+        body { background-color: var(--bg); color: var(--ink); font-family: 'Noto Serif SC', serif; }
         .serif-ital { font-family: 'Bodoni Moda', serif; font-style: italic; }
         
-        /* 卫星地图质感容器 */
-        .map-container {
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000') center/cover;
-            height: 40vh;
+        /* 高清卫星地图视窗 */
+        .map-view {
+            height: 45vh;
+            background-size: cover;
+            background-position: center;
             border-radius: 0 0 40px 40px;
             position: relative;
+            transition: background-image 0.8s ease-in-out;
+            box-shadow: inset 0 -120px 80px -20px rgba(0,0,0,0.5);
         }
 
-        /* 标签分类动效 */
-        .category-tab { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-        .category-tab.active { background: var(--ink); color: white; transform: translateY(-2px); }
+        /* 坐标点位样式 */
+        .marker {
+            position: absolute;
+            width: 12px; height: 12px;
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .marker:hover { transform: scale(1.5); background: var(--gold); }
+        .marker-label {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            background: var(--ink); color: white; padding: 2px 6px;
+            border-radius: 4px; font-size: 8px; white-space: nowrap;
+        }
 
-        /* 攻略卡片 */
-        .guide-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        
-        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .city-tab { transition: all 0.3s; opacity: 0.4; cursor: pointer; }
+        .city-tab.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: var(--gold); }
+        .guide-card { background: white; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
-    <div class="map-container flex flex-col justify-end p-6">
-        <div class="flex justify-between items-center text-white mb-4">
-            <div>
-                <h1 class="text-3xl serif-ital">Preparation</h1>
-                <p class="text-[10px] tracking-[0.3em] uppercase opacity-70">Pre-trip Intelligence</p>
+    <div id="map-bg" class="map-view flex flex-col justify-end p-8">
+        <div id="marker-layer" class="absolute inset-0">
             </div>
-            <div class="text-right">
-                <p class="text-xs opacity-60">2026 Summer</p>
-                <p class="text-lg serif-ital" id="header-city">Paris, FR</p>
-            </div>
+        
+        <div class="relative z-10 text-white">
+            <h1 class="text-4xl serif-ital mb-1" id="current-city-name">Paris</h1>
+            <p class="text-[9px] tracking-[0.4em] uppercase opacity-60">Global Strategy & Route</p>
         </div>
     </div>
 
-    <div class="max-w-xl mx-auto px-6 -mt-8 relative z-10">
-        <div class="flex space-x-3 overflow-x-auto no-scrollbar mb-8">
-            <div onclick="switchCat('all')" class="category-tab active px-5 py-2 rounded-full text-[10px] uppercase font-bold tracking-widest whitespace-nowrap" id="cat-all">All</div>
-            <div onclick="switchCat('spot')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-spot">景点</div>
-            <div onclick="switchCat('food')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-food">美食</div>
-            <div onclick="switchCat('stay')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-stay">住宿</div>
-            <div onclick="switchCat('trans')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-trans">交通</div>
+    <div class="px-6 -mt-6 relative z-20">
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-xl overflow-x-auto no-scrollbar flex space-x-6 items-center">
+            <span onclick="switchCity('Florence')" class="city-tab text-xs whitespace-nowrap" id="tab-Florence">佛罗伦萨</span>
+            <span onclick="switchCity('Pisa')" class="city-tab text-xs whitespace-nowrap" id="tab-Pisa">比萨</span>
+            <span onclick="switchCity('Rome')" class="city-tab text-xs whitespace-nowrap" id="tab-Rome">罗马</span>
+            <span onclick="switchCity('Naples')" class="city-tab text-xs whitespace-nowrap" id="tab-Naples">那不勒斯</span>
+            <span onclick="switchCity('Venice')" class="city-tab text-xs whitespace-nowrap" id="tab-Venice">威尼斯</span>
+            <span onclick="switchCity('Milan')" class="city-tab text-xs whitespace-nowrap" id="tab-Milan">米兰</span>
+            <span onclick="switchCity('Luzern')" class="city-tab text-xs whitespace-nowrap" id="tab-Luzern">卢塞恩</span>
+            <span onclick="switchCity('Interlaken')" class="city-tab text-xs whitespace-nowrap" id="tab-Interlaken">因特拉肯</span>
+            <span onclick="switchCity('Grindelwald')" class="city-tab text-xs whitespace-nowrap" id="tab-Grindelwald">格林德瓦</span>
+            <span onclick="switchCity('Paris')" class="city-tab active text-xs whitespace-nowrap" id="tab-Paris">巴黎</span>
+            <span onclick="switchCity('Marseille')" class="city-tab text-xs whitespace-nowrap" id="tab-Marseille">马赛</span>
+            <span onclick="switchCity('Provence')" class="city-tab text-xs whitespace-nowrap" id="tab-Provence">普罗旺斯</span>
+            <span onclick="switchCity('Nice')" class="city-tab text-xs whitespace-nowrap" id="tab-Nice">尼斯</span>
         </div>
+    </div>
 
-        <div class="relative pl-10" id="guide-content">
-            <div class="timeline-line border-l border-dashed"></div>
-            
-            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="spot">
-                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-bold text-gold tracking-widest">09:00 AM</span>
-                    <span class="bg-stone-100 px-2 py-1 rounded text-[8px] uppercase">Spot / 景点</span>
-                </div>
-                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">罗浮宫 Musée du Louvre</h3>
-                <div class="grid grid-cols-2 gap-4 text-[10px] opacity-60">
-                    <div class="space-y-1">
-                        <p>📍 <span contenteditable="true">Rue de Rivoli</span></p>
-                        <p>🕒 <span contenteditable="true">09:00-18:00</span></p>
-                    </div>
-                    <div class="space-y-1 text-right">
-                        <p>🎫 <span contenteditable="true">€17 (需预约)</span></p>
-                        <p>🚇 <span contenteditable="true">M1/M7 Palais Royal</span></p>
-                    </div>
-                </div>
-                <p class="mt-4 text-[11px] leading-relaxed italic border-t pt-3 border-gray-50 edit" contenteditable="true">
-                    Tips: 记得从狮子门进入，可以避开金字塔的人潮。
-                </p>
-            </div>
-
-            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="stay">
-                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-bold text-gold tracking-widest">Check-in</span>
-                    <span class="bg-stone-100 px-2 py-1 rounded text-[8px] uppercase">Stay / 住宿</span>
-                </div>
-                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">玛黑区精品酒店</h3>
-                <p class="text-[10px] opacity-60">📍 <span contenteditable="true">Le Marais, Paris</span></p>
-                <div class="mt-4 p-3 bg-stone-50 rounded-xl text-[10px] leading-loose">
-                    <p>✨ 心愿：早起去楼下的面包店买可颂</p>
-                </div>
+    <div class="max-w-xl mx-auto px-6 mt-10">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-sm tracking-widest font-light">STRATEGY / 攻略详情</h2>
+            <div class="flex space-x-2">
+                <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                <div class="w-2 h-2 rounded-full bg-orange-400"></div>
             </div>
         </div>
 
-        <button onclick="addCard()" class="w-full py-4 border-2 border-dashed border-gray-300 rounded-2xl text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity">
-            + Add New Intelligence
+        <div id="city-content" class="space-y-6">
+            </div>
+        
+        <button onclick="addIntelligence()" class="w-full py-4 mt-8 border-2 border-dashed border-gray-300 rounded-2xl text-[10px] uppercase tracking-widest opacity-40">
+            + 补充新的情报
         </button>
     </div>
 
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex space-x-4 bg-ink/90 backdrop-blur-lg px-8 py-4 rounded-full text-white text-[10px] tracking-widest uppercase z-50">
-        <a href="#" class="opacity-50">Archive</a>
-        <span class="opacity-20">|</span>
-        <a href="#" class="font-bold">Preparation</a>
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex space-x-8 bg-ink px-10 py-4 rounded-full text-white text-[10px] tracking-[0.3em] uppercase z-50 shadow-2xl">
+        <span class="font-bold border-b border-gold">Prep</span>
+        <span class="opacity-30">Archive</span>
     </div>
 
     <script>
-        // 切换分类逻辑
-        function switchCat(cat) {
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`cat-${cat}`).classList.add('active');
-            
-            const items = document.querySelectorAll('.guide-item');
-            items.forEach(item => {
-                if (cat === 'all' || item.getAttribute('data-cat') === cat) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
+        const cityData = {
+            'Paris': {
+                cn: '巴黎',
+                img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2000',
+                markers: [
+                    { name: 'Gare du Nord', x: '45%', y: '30%', type: 'trans' },
+                    { name: 'Hotel de Marais', x: '60%', y: '55%', type: 'stay' },
+                    { name: 'Louvre', x: '50%', y: '45%', type: 'spot' }
+                ]
+            },
+            'Rome': {
+                cn: '罗马',
+                img: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=80&w=2000',
+                markers: [
+                    { name: 'Termini Station', x: '70%', y: '40%', type: 'trans' },
+                    { name: 'Colosseum', x: '65%', y: '60%', type: 'spot' }
+                ]
+            },
+            'Florence': { cn: '佛罗伦萨', img: 'https://images.unsplash.com/photo-1541370976299-4d24ebbc9077?q=80&w=2000', markers: [] },
+            'Pisa': { cn: '比萨', img: 'https://images.unsplash.com/photo-1534445025420-671891783307?q=80&w=2000', markers: [] },
+            'Venice': { cn: '威尼斯', img: 'https://images.unsplash.com/photo-1514890547357-a9ee2887a35f?q=80&w=2000', markers: [] },
+            'Milan': { cn: '米兰', img: 'https://images.unsplash.com/photo-1520440229334-962aee48c9a2?q=80&w=2000', markers: [] },
+            'Luzern': { cn: '卢塞恩', img: 'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?q=80&w=2000', markers: [] },
+            'Interlaken': { cn: '因特拉肯', img: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2000', markers: [] },
+            'Grindelwald': { cn: '格林德瓦', img: 'https://images.unsplash.com/photo-1505245208761-ba872912fac0?q=80&w=2000', markers: [] },
+            'Naples': { cn: '那不勒斯', img: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=2000', markers: [] },
+            'Marseille': { cn: '马赛', img: 'https://images.unsplash.com/photo-1563290263-228741364741?q=80&w=2000', markers: [] },
+            'Provence': { cn: '普罗旺斯', img: 'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?q=80&w=2000', markers: [] },
+            'Nice': { cn: '尼斯', img: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?q=80&w=2000', markers: [] }
+        };
+
+        function switchCity(cityId) {
+            const data = cityData[cityId];
+            if (!data) return;
+
+            // 1. 更新 UI 状态
+            document.querySelectorAll('.city-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${cityId}`).classList.add('active');
+            document.getElementById('current-city-name').innerText = cityId;
+            document.getElementById('map-bg').style.backgroundImage = `url('${data.img}')`;
+
+            // 2. 生成地图标注
+            const markerLayer = document.getElementById('marker-layer');
+            markerLayer.innerHTML = '';
+            data.markers.forEach(m => {
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = m.x;
+                marker.style.top = m.y;
+                marker.innerHTML = `<div class="marker-label">${m.name}</div>`;
+                markerLayer.appendChild(marker);
             });
+
+            // 3. 加载对应的攻略卡片 (这里预设了一些默认内容)
+            renderContent(cityId);
         }
 
-        // 动态添加卡片 (简化版)
-        function addCard() {
-            const template = `
-            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="spot">
-                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-bold text-gold tracking-widest">NEW TIME</span>
-                    <select onchange="this.parentElement.parentElement.setAttribute('data-cat', this.value)" class="text-[8px] bg-transparent uppercase outline-none">
-                        <option value="spot">景点</option>
-                        <option value="food">美食</option>
-                        <option value="stay">住宿</option>
-                        <option value="trans">交通</option>
-                    </select>
+        function renderContent(cityId) {
+            const container = document.getElementById('city-content');
+            container.innerHTML = `
+                <div class="guide-card p-6">
+                    <div class="flex justify-between mb-4">
+                        <span class="text-[10px] font-bold text-blue-500 uppercase">Transport</span>
+                        <span class="text-[10px] opacity-30 italic">Priority 01</span>
+                    </div>
+                    <h3 class="text-sm font-bold mb-2 contenteditable="true">抵达 ${cityData[cityId].cn} 交通</h3>
+                    <p class="text-[10px] leading-loose opacity-60" contenteditable="true">在这里记录车站信息、如何从机场到市区等细节...</p>
                 </div>
-                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">输入新目的地...</h3>
-                <div class="grid grid-cols-2 gap-4 text-[10px] opacity-60">
-                    <p>📍 <span contenteditable="true">地点</span></p>
-                    <p class="text-right">🎫 <span contenteditable="true">门票/备注</span></p>
+                <div class="guide-card p-6">
+                    <div class="flex justify-between mb-4">
+                        <span class="text-[10px] font-bold text-green-500 uppercase">Must See</span>
+                    </div>
+                    <h3 class="text-sm font-bold mb-2 contenteditable="true">必看景点与门票</h3>
+                    <p class="text-[10px] leading-loose opacity-60" contenteditable="true">输入地点、票价、预约时间等攻略信息...</p>
                 </div>
-            </div>`;
-            document.getElementById('guide-content').insertAdjacentHTML('beforeend', template);
+            `;
         }
 
-        // 保存逻辑 (可根据需要扩展 localStorage)
-        document.addEventListener('input', () => {
-            // 这里可以添加自动保存到 localStorage 的逻辑
-        });
+        function addIntelligence() {
+            const newCard = `
+                <div class="guide-card p-6 border-2 border-dashed border-gray-100">
+                    <h3 class="text-sm font-bold mb-2" contenteditable="true">新增情报标题...</h3>
+                    <p class="text-[10px] opacity-60" contenteditable="true">输入详细攻略内容...</p>
+                </div>`;
+            document.getElementById('city-content').insertAdjacentHTML('beforeend', newCard);
+        }
+
+        // 初始化
+        window.onload = () => switchCity('Paris');
     </script>
 </body>
 </html>
