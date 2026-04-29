@@ -3,130 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bei & Meng · Europe Archives</title>
+    <title>Bei & Meng · Europe Sensory Archives</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&family=Homemade+Apple&display=swap');
-        
-        :root { --cream: #F4F1EA; --ink: #322F2B; --tape: rgba(210, 204, 184, 0.5); }
-        body { background-color: #E5E2D9; color: var(--ink); font-family: 'Noto Serif SC', serif; }
-        
+        :root { --cream: #F4F1EA; --ink: #322F2B; --olive: #7A8D84; }
+        body { background-color: #E5E2D9; color: var(--ink); font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased; }
         .serif-ital { font-family: 'Bodoni Moda', serif; font-style: italic; }
         .handwritten { font-family: 'Homemade Apple', cursive; }
-
-        /* 拟物化日记本设计 */
-        .notebook-page {
-            background: var(--cream);
-            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
-            background-size: 20px 20px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.1);
-            position: relative;
-            border-left: 15px solid #D9D4C7;
-        }
-
-        /* 胶带效果 */
-        .tape-effect {
-            background: var(--tape);
-            transform: rotate(-2deg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .active-dot { fill: #7A8D84; r: 6; filter: drop-shadow(0 0 3px rgba(122,141,132,0.5)); }
-        
-        .artifact-slot {
-            background: white;
-            padding: 8px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
-            transform: rotate(1deg);
-        }
+        .notebook-page { background: var(--cream); box-shadow: 5px 5px 20px rgba(0,0,0,0.05); border-left: 10px solid #D9D4C7; position: relative; }
+        .active-dot { fill: var(--olive); r: 6; filter: drop-shadow(0 0 3px rgba(122,141,132,0.4)); }
+        .scent-tag { background: #FFFFFF; border: 1px solid #E2E0D5; padding: 10px; transform: rotate(-1deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.02); }
+        .audio-wave { height: 2px; background: repeating-linear-gradient(90deg, #7A8D84 0px, #7A8D84 2px, transparent 2px, transparent 4px); width: 100%; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-8">
     <div class="max-w-xl mx-auto">
-        <section class="mb-12 text-center">
-            <h2 class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-6">Route Map / 行迹轨迹</h2>
-            <div class="glass-card p-4 inline-block bg-white/30 rounded-full mb-4">
-                <svg viewBox="0 0 200 150" class="w-64 mx-auto opacity-80">
-                    <path d="M50,40 Q70,20 100,30 T150,50 T130,100 T80,120 Z" fill="none" stroke="#7A8D84" stroke-width="0.5" />
-                    <circle cx="75" cy="55" r="3" fill="#CCC" class="cursor-pointer hover:fill-[#7A8D84]" onclick="switchCity('Paris')" id="dot-Paris" />
-                    <circle cx="110" cy="85" r="3" fill="#CCC" class="cursor-pointer hover:fill-[#7A8D84]" onclick="switchCity('Rome')" id="dot-Rome" />
-                    <circle cx="100" cy="65" r="3" fill="#CCC" class="cursor-pointer hover:fill-[#7A8D84]" onclick="switchCity('Luzern')" id="dot-Luzern" />
-                    <circle cx="85" cy="95" r="3" fill="#CCC" class="cursor-pointer hover:fill-[#7A8D84]" onclick="switchCity('Nice')" id="dot-Nice" />
-                </svg>
-            </div>
-            <p class="text-[9px] italic opacity-50">点击圆点，切换时空</p>
+        <section class="mb-10 text-center">
+            <svg viewBox="0 0 200 120" class="w-48 mx-auto opacity-60 mb-2">
+                <path d="M50,40 Q70,20 100,30 T150,50 T130,100 T80,120 Z" fill="none" stroke="#7A8D84" stroke-width="0.5" />
+                <circle cx="75" cy="55" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Paris')" id="dot-Paris" />
+                <circle cx="110" cy="85" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Rome')" id="dot-Rome" />
+                <circle cx="100" cy="65" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Luzern')" id="dot-Luzern" />
+                <circle cx="85" cy="95" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Nice')" id="dot-Nice" />
+            </svg>
+            <h1 class="serif-ital text-xl tracking-widest text-[#7A8D84]">Europe Archives</h1>
         </section>
 
-        <section class="mb-12">
-            <div class="notebook-page p-8 min-h-[400px]">
-                <div class="flex justify-between items-baseline mb-8 border-b border-black/5 pb-2">
+        <section class="mb-8">
+            <div class="notebook-page p-6 min-h-[300px]">
+                <div class="flex justify-between items-baseline mb-6 border-b border-black/5 pb-2">
                     <h3 class="serif-ital text-2xl" id="display-city">Paris</h3>
-                    <span class="text-[10px] handwritten opacity-60">Summer 2026</span>
+                    <span class="text-[10px] handwritten opacity-40">Sensory Map</span>
                 </div>
 
-                <div class="space-y-8">
-                    <div>
-                        <span class="tape-effect px-3 py-1 text-[9px] uppercase tracking-widest mb-3 inline-block">The Plan</span>
-                        <p class="text-sm leading-relaxed edit-text" id="edit-plan" contenteditable="true" onblur="saveCurrentData()">
-                            在这个洒满阳光的午后，我们打算去...
+                <div class="mb-8">
+                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-3">Scents / 气味捕捉</span>
+                    <div class="scent-tag inline-block min-w-[150px]">
+                        <p class="text-[10px] italic mb-1 opacity-30">Smells like...</p>
+                        <p class="text-xs handwritten leading-relaxed outline-none" id="edit-scent" contenteditable="true" onblur="saveCurrentData()">
+                            新鲜割下的青草味，混着圣母院旁书报摊的旧纸张香...
                         </p>
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4 py-4">
-                        <div class="artifact-slot" onclick="triggerUp('pic-1')">
-                            <img id="view-1" class="hidden w-full aspect-[3/4] object-cover mb-2">
-                            <div id="ph-1" class="h-32 flex items-center justify-center bg-gray-50 text-[10px] opacity-30">UPLOAD PHOTO</div>
-                        </div>
-                        <div class="artifact-slot -rotate-2" onclick="triggerUp('pic-2')">
-                            <img id="view-2" class="hidden w-full aspect-[3/4] object-cover mb-2">
-                            <div id="ph-2" class="h-32 flex items-center justify-center bg-gray-50 text-[10px] opacity-30">UPLOAD PHOTO</div>
+                <div class="mb-8">
+                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-3">Ambient / 声音碎片</span>
+                    <div class="bg-white/50 p-4 rounded-xl flex items-center space-x-4 border border-white/30">
+                        <button id="record-btn" onclick="toggleRecording()" class="w-10 h-10 rounded-full bg-[#7A8D84] text-white flex items-center justify-center text-xs shadow-lg">REC</button>
+                        <div class="flex-1">
+                            <div class="audio-wave opacity-30 mb-2"></div>
+                            <audio id="audio-player" controls class="h-6 w-full opacity-60"></audio>
                         </div>
                     </div>
+                    <p class="text-[8px] mt-2 opacity-30 italic">* 点击录制当下环境音（限制30秒内）</p>
+                </div>
 
-                    <div class="pt-4">
-                        <span class="text-[9px] italic opacity-40 block mb-2 font-light">Mood / 碎碎念</span>
-                        <p class="handwritten text-sm leading-loose opacity-80" id="edit-mood" contenteditable="true" onblur="saveCurrentData()">
-                            It feels like a movie scene...
-                        </p>
-                    </div>
+                <div>
+                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-2">Thoughts / 碎碎念</span>
+                    <p class="text-sm leading-relaxed handwritten" id="edit-mood" contenteditable="true" onblur="saveCurrentData()">
+                        那一刻，时间好像静止了。
+                    </p>
                 </div>
             </div>
         </section>
 
-        <section class="mb-20">
-            <h2 class="text-[11px] font-light tracking-[0.3em] mb-6 text-center text-[#7A8D84]">ARTIFACTS / 琐碎收藏</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div class="artifact-slot text-center cursor-pointer" onclick="triggerUp('item-1')">
-                    <div id="ph-item-1" class="h-20 bg-stone-100 flex items-center justify-center text-[18px] opacity-20">+</div>
-                    <img id="view-item-1" class="hidden w-full h-20 object-contain">
-                    <p class="text-[8px] mt-2 opacity-40 uppercase tracking-tighter" contenteditable="true" id="name-item-1">票据</p>
-                </div>
-                <div class="artifact-slot rotate-3 text-center cursor-pointer" onclick="triggerUp('item-2')">
-                    <div id="ph-item-2" class="h-20 bg-stone-100 flex items-center justify-center text-[18px] opacity-20">+</div>
-                    <img id="view-item-2" class="hidden w-full h-20 object-contain">
-                    <p class="text-[8px] mt-2 opacity-40 uppercase tracking-tighter" contenteditable="true" id="name-item-2">明信片</p>
-                </div>
-                <div class="artifact-slot -rotate-2 text-center cursor-pointer" onclick="triggerUp('item-3')">
-                    <div id="ph-item-3" class="h-20 bg-stone-100 flex items-center justify-center text-[18px] opacity-20">+</div>
-                    <img id="view-item-3" class="hidden w-full h-20 object-contain">
-                    <p class="text-[8px] mt-2 opacity-40 uppercase tracking-tighter" contenteditable="true" id="name-item-3">花瓣</p>
-                </div>
+        <section class="grid grid-cols-2 gap-4 mb-12">
+            <div class="bg-white/40 p-3 rounded-2xl text-center cursor-pointer" onclick="triggerUp('ootd')">
+                <span class="text-[8px] opacity-40 uppercase block mb-2">Today's OOTD</span>
+                <img id="view-ootd" class="hidden rounded-xl w-full aspect-[3/4] object-cover">
+                <div id="ph-ootd" class="h-32 flex items-center justify-center bg-gray-100/50 rounded-xl text-[10px] opacity-20 italic">UPLOAD</div>
             </div>
-            <input type="file" id="input-pic-1" class="hidden" onchange="handleFile(this, 'pic-1')">
-            <input type="file" id="input-pic-2" class="hidden" onchange="handleFile(this, 'pic-2')">
-            <input type="file" id="input-item-1" class="hidden" onchange="handleFile(this, 'item-1')">
-            <input type="file" id="input-item-2" class="hidden" onchange="handleFile(this, 'item-2')">
-            <input type="file" id="input-item-3" class="hidden" onchange="handleFile(this, 'item-3')">
+            <div class="bg-white/40 p-3 rounded-2xl text-center cursor-pointer" onclick="triggerUp('item')">
+                <span class="text-[8px] opacity-40 uppercase block mb-2">Artifact</span>
+                <img id="view-item" class="hidden rounded-xl w-full aspect-[3/4] object-contain">
+                <div id="ph-item" class="h-32 flex items-center justify-center bg-gray-100/50 rounded-xl text-[10px] opacity-20 italic">COLLECT</div>
+            </div>
         </section>
+
+        <input type="file" id="input-ootd" class="hidden" onchange="handleFile(this, 'ootd')">
+        <input type="file" id="input-item" class="hidden" onchange="handleFile(this, 'item')">
 
         <footer class="text-center pb-12 opacity-20 text-[8px] tracking-[0.5em]">
-            MADE FOR BEI & MENG · EUROPE ARCHIVES 2026
+            B & M · EUROPE SENSORY 2026
         </footer>
     </div>
 
     <script>
         let currentCity = 'Paris';
-        const fileKeys = ['pic-1', 'pic-2', 'item-1', 'item-2', 'item-3'];
+        let mediaRecorder;
+        let audioChunks = [];
 
         function switchCity(city) {
             currentCity = city;
@@ -134,6 +101,35 @@
             document.getElementById(`dot-${city}`).classList.add('active-dot');
             document.getElementById('display-city').innerText = city;
             loadCityData(city);
+        }
+
+        // 声音录制逻辑
+        async function toggleRecording() {
+            const btn = document.getElementById('record-btn');
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64 = reader.result;
+                        localStorage.setItem(`audio-${currentCity}`, base64);
+                        document.getElementById('audio-player').src = base64;
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    btn.innerText = 'REC';
+                    btn.classList.remove('animate-pulse');
+                };
+                mediaRecorder.start();
+                btn.innerText = '...';
+                btn.classList.add('animate-pulse');
+                setTimeout(() => { if(mediaRecorder.state === 'recording') mediaRecorder.stop(); }, 30000);
+            } else {
+                mediaRecorder.stop();
+            }
         }
 
         function triggerUp(id) { document.getElementById(`input-${id}`).click(); }
@@ -154,28 +150,27 @@
 
         function saveCurrentData() {
             const data = {
-                plan: document.getElementById('edit-plan').innerText,
-                mood: document.getElementById('edit-mood').innerText,
-                n1: document.getElementById('name-item-1').innerText,
-                n2: document.getElementById('name-item-2').innerText,
-                n3: document.getElementById('name-item-3').innerText,
+                scent: document.getElementById('edit-scent').innerText,
+                mood: document.getElementById('edit-mood').innerText
             };
             localStorage.setItem(`text-${currentCity}`, JSON.stringify(data));
         }
 
         function loadCityData(city) {
             const t = JSON.parse(localStorage.getItem(`text-${city}`));
-            document.getElementById('edit-plan').innerText = t?.plan || "点击记录计划...";
-            document.getElementById('edit-mood').innerText = t?.mood || "It feels like...";
-            document.getElementById('name-item-1').innerText = t?.n1 || "票据";
-            document.getElementById('name-item-2').innerText = t?.n2 || "明信片";
-            document.getElementById('name-item-3').innerText = t?.n3 || "花瓣";
+            document.getElementById('edit-scent').innerText = t?.scent || "Smells like...";
+            document.getElementById('edit-mood').innerText = t?.mood || "那一刻...";
+            
+            // 加载声音
+            const s = localStorage.getItem(`audio-${city}`);
+            document.getElementById('audio-player').src = s || '';
 
-            fileKeys.forEach(k => {
-                const s = localStorage.getItem(`file-${city}-${k}`);
+            // 加载照片
+            ['ootd', 'item'].forEach(k => {
+                const f = localStorage.getItem(`file-${city}-${k}`);
                 const v = document.getElementById(`view-${k}`);
                 const p = document.getElementById(`ph-${k}`);
-                if (s) { v.src = s; v.classList.remove('hidden'); p.classList.add('hidden'); }
+                if (f) { v.src = f; v.classList.remove('hidden'); p.classList.add('hidden'); }
                 else { v.classList.add('hidden'); p.classList.remove('hidden'); }
             });
         }
