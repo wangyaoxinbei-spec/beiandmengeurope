@@ -3,179 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bei & Meng · Europe Sensory Archives</title>
+    <title>Bei & Meng · Europe Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&family=Homemade+Apple&display=swap');
-        :root { --cream: #F4F1EA; --ink: #322F2B; --olive: #7A8D84; }
-        body { background-color: #E5E2D9; color: var(--ink); font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased; }
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&display=swap');
+        :root { --ink: #1A1A1A; --gold: #C5A059; --bg: #F2F0EB; }
+        body { background-color: var(--bg); color: var(--ink); font-family: 'Noto Serif SC', serif; overflow-x: hidden; }
         .serif-ital { font-family: 'Bodoni Moda', serif; font-style: italic; }
-        .handwritten { font-family: 'Homemade Apple', cursive; }
-        .notebook-page { background: var(--cream); box-shadow: 5px 5px 20px rgba(0,0,0,0.05); border-left: 10px solid #D9D4C7; position: relative; }
-        .active-dot { fill: var(--olive); r: 6; filter: drop-shadow(0 0 3px rgba(122,141,132,0.4)); }
-        .scent-tag { background: #FFFFFF; border: 1px solid #E2E0D5; padding: 10px; transform: rotate(-1deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.02); }
-        .audio-wave { height: 2px; background: repeating-linear-gradient(90deg, #7A8D84 0px, #7A8D84 2px, transparent 2px, transparent 4px); width: 100%; }
+        
+        /* 卫星地图质感容器 */
+        .map-container {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000') center/cover;
+            height: 40vh;
+            border-radius: 0 0 40px 40px;
+            position: relative;
+        }
+
+        /* 标签分类动效 */
+        .category-tab { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
+        .category-tab.active { background: var(--ink); color: white; transform: translateY(-2px); }
+
+        /* 攻略卡片 */
+        .guide-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-xl mx-auto">
-        <section class="mb-10 text-center">
-            <svg viewBox="0 0 200 120" class="w-48 mx-auto opacity-60 mb-2">
-                <path d="M50,40 Q70,20 100,30 T150,50 T130,100 T80,120 Z" fill="none" stroke="#7A8D84" stroke-width="0.5" />
-                <circle cx="75" cy="55" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Paris')" id="dot-Paris" />
-                <circle cx="110" cy="85" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Rome')" id="dot-Rome" />
-                <circle cx="100" cy="65" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Luzern')" id="dot-Luzern" />
-                <circle cx="85" cy="95" r="3" fill="#CCC" class="cursor-pointer" onclick="switchCity('Nice')" id="dot-Nice" />
-            </svg>
-            <h1 class="serif-ital text-xl tracking-widest text-[#7A8D84]">Europe Archives</h1>
-        </section>
+<body class="pb-20">
 
-        <section class="mb-8">
-            <div class="notebook-page p-6 min-h-[300px]">
-                <div class="flex justify-between items-baseline mb-6 border-b border-black/5 pb-2">
-                    <h3 class="serif-ital text-2xl" id="display-city">Paris</h3>
-                    <span class="text-[10px] handwritten opacity-40">Sensory Map</span>
+    <div class="map-container flex flex-col justify-end p-6">
+        <div class="flex justify-between items-center text-white mb-4">
+            <div>
+                <h1 class="text-3xl serif-ital">Preparation</h1>
+                <p class="text-[10px] tracking-[0.3em] uppercase opacity-70">Pre-trip Intelligence</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs opacity-60">2026 Summer</p>
+                <p class="text-lg serif-ital" id="header-city">Paris, FR</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-xl mx-auto px-6 -mt-8 relative z-10">
+        <div class="flex space-x-3 overflow-x-auto no-scrollbar mb-8">
+            <div onclick="switchCat('all')" class="category-tab active px-5 py-2 rounded-full text-[10px] uppercase font-bold tracking-widest whitespace-nowrap" id="cat-all">All</div>
+            <div onclick="switchCat('spot')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-spot">景点</div>
+            <div onclick="switchCat('food')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-food">美食</div>
+            <div onclick="switchCat('stay')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-stay">住宿</div>
+            <div onclick="switchCat('trans')" class="category-tab bg-white px-5 py-2 rounded-full text-[10px] uppercase tracking-widest whitespace-nowrap" id="cat-trans">交通</div>
+        </div>
+
+        <div class="relative pl-10" id="guide-content">
+            <div class="timeline-line border-l border-dashed"></div>
+            
+            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="spot">
+                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-bold text-gold tracking-widest">09:00 AM</span>
+                    <span class="bg-stone-100 px-2 py-1 rounded text-[8px] uppercase">Spot / 景点</span>
                 </div>
-
-                <div class="mb-8">
-                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-3">Scents / 气味捕捉</span>
-                    <div class="scent-tag inline-block min-w-[150px]">
-                        <p class="text-[10px] italic mb-1 opacity-30">Smells like...</p>
-                        <p class="text-xs handwritten leading-relaxed outline-none" id="edit-scent" contenteditable="true" onblur="saveCurrentData()">
-                            新鲜割下的青草味，混着圣母院旁书报摊的旧纸张香...
-                        </p>
+                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">罗浮宫 Musée du Louvre</h3>
+                <div class="grid grid-cols-2 gap-4 text-[10px] opacity-60">
+                    <div class="space-y-1">
+                        <p>📍 <span contenteditable="true">Rue de Rivoli</span></p>
+                        <p>🕒 <span contenteditable="true">09:00-18:00</span></p>
+                    </div>
+                    <div class="space-y-1 text-right">
+                        <p>🎫 <span contenteditable="true">€17 (需预约)</span></p>
+                        <p>🚇 <span contenteditable="true">M1/M7 Palais Royal</span></p>
                     </div>
                 </div>
+                <p class="mt-4 text-[11px] leading-relaxed italic border-t pt-3 border-gray-50 edit" contenteditable="true">
+                    Tips: 记得从狮子门进入，可以避开金字塔的人潮。
+                </p>
+            </div>
 
-                <div class="mb-8">
-                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-3">Ambient / 声音碎片</span>
-                    <div class="bg-white/50 p-4 rounded-xl flex items-center space-x-4 border border-white/30">
-                        <button id="record-btn" onclick="toggleRecording()" class="w-10 h-10 rounded-full bg-[#7A8D84] text-white flex items-center justify-center text-xs shadow-lg">REC</button>
-                        <div class="flex-1">
-                            <div class="audio-wave opacity-30 mb-2"></div>
-                            <audio id="audio-player" controls class="h-6 w-full opacity-60"></audio>
-                        </div>
-                    </div>
-                    <p class="text-[8px] mt-2 opacity-30 italic">* 点击录制当下环境音（限制30秒内）</p>
+            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="stay">
+                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-bold text-gold tracking-widest">Check-in</span>
+                    <span class="bg-stone-100 px-2 py-1 rounded text-[8px] uppercase">Stay / 住宿</span>
                 </div>
-
-                <div>
-                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-40 block mb-2">Thoughts / 碎碎念</span>
-                    <p class="text-sm leading-relaxed handwritten" id="edit-mood" contenteditable="true" onblur="saveCurrentData()">
-                        那一刻，时间好像静止了。
-                    </p>
+                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">玛黑区精品酒店</h3>
+                <p class="text-[10px] opacity-60">📍 <span contenteditable="true">Le Marais, Paris</span></p>
+                <div class="mt-4 p-3 bg-stone-50 rounded-xl text-[10px] leading-loose">
+                    <p>✨ 心愿：早起去楼下的面包店买可颂</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="grid grid-cols-2 gap-4 mb-12">
-            <div class="bg-white/40 p-3 rounded-2xl text-center cursor-pointer" onclick="triggerUp('ootd')">
-                <span class="text-[8px] opacity-40 uppercase block mb-2">Today's OOTD</span>
-                <img id="view-ootd" class="hidden rounded-xl w-full aspect-[3/4] object-cover">
-                <div id="ph-ootd" class="h-32 flex items-center justify-center bg-gray-100/50 rounded-xl text-[10px] opacity-20 italic">UPLOAD</div>
-            </div>
-            <div class="bg-white/40 p-3 rounded-2xl text-center cursor-pointer" onclick="triggerUp('item')">
-                <span class="text-[8px] opacity-40 uppercase block mb-2">Artifact</span>
-                <img id="view-item" class="hidden rounded-xl w-full aspect-[3/4] object-contain">
-                <div id="ph-item" class="h-32 flex items-center justify-center bg-gray-100/50 rounded-xl text-[10px] opacity-20 italic">COLLECT</div>
-            </div>
-        </section>
+        <button onclick="addCard()" class="w-full py-4 border-2 border-dashed border-gray-300 rounded-2xl text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity">
+            + Add New Intelligence
+        </button>
+    </div>
 
-        <input type="file" id="input-ootd" class="hidden" onchange="handleFile(this, 'ootd')">
-        <input type="file" id="input-item" class="hidden" onchange="handleFile(this, 'item')">
-
-        <footer class="text-center pb-12 opacity-20 text-[8px] tracking-[0.5em]">
-            B & M · EUROPE SENSORY 2026
-        </footer>
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex space-x-4 bg-ink/90 backdrop-blur-lg px-8 py-4 rounded-full text-white text-[10px] tracking-widest uppercase z-50">
+        <a href="#" class="opacity-50">Archive</a>
+        <span class="opacity-20">|</span>
+        <a href="#" class="font-bold">Preparation</a>
     </div>
 
     <script>
-        let currentCity = 'Paris';
-        let mediaRecorder;
-        let audioChunks = [];
-
-        function switchCity(city) {
-            currentCity = city;
-            document.querySelectorAll('circle').forEach(c => c.classList.remove('active-dot'));
-            document.getElementById(`dot-${city}`).classList.add('active-dot');
-            document.getElementById('display-city').innerText = city;
-            loadCityData(city);
-        }
-
-        // 声音录制逻辑
-        async function toggleRecording() {
-            const btn = document.getElementById('record-btn');
-            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        const base64 = reader.result;
-                        localStorage.setItem(`audio-${currentCity}`, base64);
-                        document.getElementById('audio-player').src = base64;
-                    };
-                    reader.readAsDataURL(audioBlob);
-                    btn.innerText = 'REC';
-                    btn.classList.remove('animate-pulse');
-                };
-                mediaRecorder.start();
-                btn.innerText = '...';
-                btn.classList.add('animate-pulse');
-                setTimeout(() => { if(mediaRecorder.state === 'recording') mediaRecorder.stop(); }, 30000);
-            } else {
-                mediaRecorder.stop();
-            }
-        }
-
-        function triggerUp(id) { document.getElementById(`input-${id}`).click(); }
-
-        function handleFile(input, key) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById(`view-${key}`).src = e.target.result;
-                    document.getElementById(`view-${key}`).classList.remove('hidden');
-                    document.getElementById(`ph-${key}`).classList.add('hidden');
-                    localStorage.setItem(`file-${currentCity}-${key}`, e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveCurrentData() {
-            const data = {
-                scent: document.getElementById('edit-scent').innerText,
-                mood: document.getElementById('edit-mood').innerText
-            };
-            localStorage.setItem(`text-${currentCity}`, JSON.stringify(data));
-        }
-
-        function loadCityData(city) {
-            const t = JSON.parse(localStorage.getItem(`text-${city}`));
-            document.getElementById('edit-scent').innerText = t?.scent || "Smells like...";
-            document.getElementById('edit-mood').innerText = t?.mood || "那一刻...";
+        // 切换分类逻辑
+        function switchCat(cat) {
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`cat-${cat}`).classList.add('active');
             
-            // 加载声音
-            const s = localStorage.getItem(`audio-${city}`);
-            document.getElementById('audio-player').src = s || '';
-
-            // 加载照片
-            ['ootd', 'item'].forEach(k => {
-                const f = localStorage.getItem(`file-${city}-${k}`);
-                const v = document.getElementById(`view-${k}`);
-                const p = document.getElementById(`ph-${k}`);
-                if (f) { v.src = f; v.classList.remove('hidden'); p.classList.add('hidden'); }
-                else { v.classList.add('hidden'); p.classList.remove('hidden'); }
+            const items = document.querySelectorAll('.guide-item');
+            items.forEach(item => {
+                if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
             });
         }
 
-        window.onload = () => switchCity('Paris');
+        // 动态添加卡片 (简化版)
+        function addCard() {
+            const template = `
+            <div class="guide-card p-6 mb-6 relative guide-item" data-cat="spot">
+                <div class="absolute -left-[31px] top-7 w-2 h-2 rounded-full bg-ink border-4 border-bg shadow-sm"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-bold text-gold tracking-widest">NEW TIME</span>
+                    <select onchange="this.parentElement.parentElement.setAttribute('data-cat', this.value)" class="text-[8px] bg-transparent uppercase outline-none">
+                        <option value="spot">景点</option>
+                        <option value="food">美食</option>
+                        <option value="stay">住宿</option>
+                        <option value="trans">交通</option>
+                    </select>
+                </div>
+                <h3 class="text-sm font-bold mb-2 edit" contenteditable="true">输入新目的地...</h3>
+                <div class="grid grid-cols-2 gap-4 text-[10px] opacity-60">
+                    <p>📍 <span contenteditable="true">地点</span></p>
+                    <p class="text-right">🎫 <span contenteditable="true">门票/备注</span></p>
+                </div>
+            </div>`;
+            document.getElementById('guide-content').insertAdjacentHTML('beforeend', template);
+        }
+
+        // 保存逻辑 (可根据需要扩展 localStorage)
+        document.addEventListener('input', () => {
+            // 这里可以添加自动保存到 localStorage 的逻辑
+        });
     </script>
 </body>
 </html>
